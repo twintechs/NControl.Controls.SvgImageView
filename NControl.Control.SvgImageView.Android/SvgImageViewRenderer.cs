@@ -15,9 +15,13 @@ namespace NControl.Controls.Android {
         /// <summary>
         /// Used for registration with dependency service
         /// </summary>
-        public static void Init ()
-        {
+        public static void Init() {
             var temp = DateTime.Now;
+        }
+
+        public SvgImageViewRenderer() {
+            // Offer to do our own drawing so Android will actually call `Draw`.
+            SetWillNotDraw(willNotDraw: false);
         }
 
         SvgImageView FormsControl {
