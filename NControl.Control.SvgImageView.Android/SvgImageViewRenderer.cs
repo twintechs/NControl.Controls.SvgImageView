@@ -1,6 +1,6 @@
 ﻿using System;
-using System.ComponentModel;
 using Android.Graphics;
+using Android.Runtime;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.Android;
 using NGraphics;
@@ -10,7 +10,16 @@ using Size = NGraphics.Size;
 
 [assembly: ExportRenderer(typeof(SvgImageView), typeof(SvgImageViewRenderer))]
 namespace NControl.Controls.Android {
+    [Preserve(AllMembers = true)]
     public class SvgImageViewRenderer : ImageRenderer {
+        /// <summary>
+        /// Used for registration with dependency service
+        /// </summary>
+        public static void Init ()
+        {
+            var temp = DateTime.Now;
+        }
+
         SvgImageView FormsControl {
             get {
                 return Element as SvgImageView;
@@ -19,12 +28,10 @@ namespace NControl.Controls.Android {
 
         static Func<Size, double, IImageCanvas> CreatePlatformImageCanvas = (size, scale) => new AndroidPlatform().CreateImageCanvas(size, scale);
 
-        public override void Draw(Canvas canvas)
-        {
+        public override void Draw(Canvas canvas) {
             base.Draw(canvas);
 
-            if (FormsControl != null)
-            {
+            if (FormsControl != null) {
                 const double screenScale = 1.0; // Don't need to deal with screen scaling on Android.
 
                 var finalCanvas = FormsControl.RenderSvgToCanvas(new Size(canvas.Width, canvas.Height), screenScale, CreatePlatformImageCanvas);
@@ -34,29 +41,25 @@ namespace NControl.Controls.Android {
             }
         }
 
-        protected override void OnElementChanged(ElementChangedEventArgs<Image> e)
-        {
+        protected override void OnElementChanged(ElementChangedEventArgs<Image> e) {
             base.OnElementChanged(e);
 
-            if (FormsControl != null)
-            {
-                FormsControl.LoadSvgFromResource();
-                Invalidate();
+            if (e.OldElement != null) {
+                (e.OldElement as SvgImageView).OnInvalidate -= HandleInvalidate;
             }
+
+            if (e.NewElement != null) {
+                (e.NewElement as SvgImageView).OnInvalidate += HandleInvalidate;
+            }
+            
+            Invalidate();
         }
 
-        protected override void OnElementPropertyChanged (object sender, PropertyChangedEventArgs e)
-        {
-            base.OnElementPropertyChanged (sender, e);
-
-            if (e.PropertyName == SvgImageView.SvgPathProperty.PropertyName
-                || e.PropertyName == SvgImageView.SvgAssemblyProperty.PropertyName) {
-                FormsControl.LoadSvgFromResource();
-                Invalidate();
-            }
-            else if (e.PropertyName == SvgImageView.SvgStretchableInsetsProperty.PropertyName) {
-                Invalidate();
-            }
+        /// <summary>
+        /// Handles view invalidate.
+        /// </summary>
+        void HandleInvalidate(object sender, System.EventArgs args) {
+            Invalidate();
         }
     }
 }
