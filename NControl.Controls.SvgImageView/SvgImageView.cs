@@ -138,16 +138,7 @@ namespace NControl.Controls {
             else
             {
                 // Typical approach to rendering an SVG; just draw it to the canvas.
-                double proportionalOutputScale;
-                if (outputSize.Height >= outputSize.Width)
-                {
-                    proportionalOutputScale = outputSize.Width/originalSvgSize.Width;
-                }
-                else
-                {
-                    proportionalOutputScale = outputSize.Height/originalSvgSize.Height;
-                }
-
+                double proportionalOutputScale = originalSvgSize.ScaleThatFits (outputSize);
                 // Make sure ViewBox is reset to a proportionally-scaled default in case it was previous set by slicing.
                 LoadedGraphic.ViewBox = new Rect(Point.Zero, LoadedGraphic.Size / proportionalOutputScale);
                 LoadedGraphic.Draw(finalCanvas);
