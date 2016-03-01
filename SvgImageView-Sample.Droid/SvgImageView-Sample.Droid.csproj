@@ -101,7 +101,7 @@
       <Project>{CC1FEFBC-C61C-4002-A466-33B8D8B4F68D}</Project>
       <Name>SvgImageView-Sample</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NControl.Control.SvgImageView.Android\NControl.Controls.SvgImageView.Android.csproj">
+    <ProjectReference Include="..\NControl.Controls.SvgImageView.Android\NControl.Controls.SvgImageView.Android.csproj">
       <Project>{418F7F98-8509-4210-983E-7DEE1198426A}</Project>
       <Name>NControl.Controls.SvgImageView.Android</Name>
     </ProjectReference>
